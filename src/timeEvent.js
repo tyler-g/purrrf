@@ -1,8 +1,10 @@
 const uuidV4    = require('uuid/v4');
 const now       = require("performance-now");
 
-function TimeEvent() {
+function TimeEvent(name, group) {
     this.id = uuidV4();
+    this.name = name || '';
+    this.group = group || '';
     this.time = typeof window !== 'undefined' ? window.performance.now() : now();
 }
 
