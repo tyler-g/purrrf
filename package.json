@@ -1,0 +1,26 @@
+{
+  "name": "purrrf",
+  "description": "a lightweight utility for measuring accurate performance timings in the browser or in nodejs",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "author": "tyler-g",
+  "repository": "tyler-g/purrrf",
+  "license": "ISC",
+  "scripts": {
+    "compile": "babel src --out-dir lib",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "prepublish": "npm run compile",
+    "test": "babel-node ./node_modules/.bin/isparta cover _mocha"
+  },
+  "devDependencies": {
+    "babel-cli": "*",
+    "babel-preset-es2017": "6.x",
+    "babel-preset-es2016": "6.x",
+    "babel-preset-es2015": "6.x",
+    "coveralls": "*",
+    "chai": "*",
+    "isparta": "*",
+    "mocha": "*",
+    "sinon": "*"
+  }
+}
