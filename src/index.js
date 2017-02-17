@@ -10,7 +10,6 @@ function init(options) {
       option defaults
     */
     options = options || {};
-    options.startRefFallback = options.startRefFallback || false;
     
     /*
       private
@@ -19,11 +18,13 @@ function init(options) {
     var getMap;
     var getTime;
     var getTimeDiff;
+    var setStart;
     
     var purrrfQueueMap      = {};
     var openGroupMap        = {};
     var purrrfOrderedQueue  = [];
     
+    var offset = 0;
     
     /*
       methods
@@ -31,7 +32,7 @@ function init(options) {
     push = function(name, group) {
         var newTime = new TimeEvent(name, group);
         
-        console.log('purrrf | push | %s %s', name, typeof group !== 'undefined' ? group : '');
+        //console.log('purrrf | push | %s %s', name, typeof group !== 'undefined' ? group : '');
         
         purrrfQueueMap[name] = newTime;
         purrrfOrderedQueue.push(newTime);
@@ -47,8 +48,11 @@ function init(options) {
             openGroupMap[group] = name;
         }
         
-        
-        return true;
+        return newTime.getTime() - offset;
+    }
+    
+    setStart = function() {
+        return offset = new TimeEvent().getTime();     
     }
     
     /* 
@@ -63,12 +67,8 @@ function init(options) {
     getTimeDiff = function(event, eventReference) {
         if (typeof purrrfQueueMap[event] === 'undefined') { return false }    
         if (typeof purrrfQueueMap[eventReference] === 'undefined') { 
-            if (options.startRefFallback) {
-                eventReference = '_start'
-            }
-            else {
-                return false;
-            }
+            // no reference passed, so simply return relative to the start reference
+            return purrrfQueueMap[event].getTime() - offset;
         }
         
         return purrrfQueueMap[event].getTimeDiff(purrrfQueueMap[eventReference]);
@@ -95,7 +95,7 @@ function init(options) {
         // otherwise assume single time event
         if (typeof purrrfQueueMap[event] === 'undefined') { return false }
         
-        return purrrfQueueMap[event].getTime();
+        return purrrfQueueMap[event].getTime() - offset;
     }
     
     getMap = function(options) {
@@ -104,15 +104,19 @@ function init(options) {
             return purrrfOrderedQueue;
         }
         
+        // special configs to return
+        purrrfQueueMap['_config'] = {
+            offset: offset
+        };
+        
         return purrrfQueueMap;
     }
-    
-    push('_start'); // used internally as the 0 reference point
     
     return {
         push        : push,
         getMap      : getMap,
         getTime     : getTime,
-        getTimeDiff : getTimeDiff
+        getTimeDiff : getTimeDiff,
+        setStart    : setStart
     }   
-}()
+}();

@@ -8,7 +8,9 @@ function TimeEvent(name, group) {
     this.time = typeof window !== 'undefined' ? window.performance.now() : now();
 }
 
-TimeEvent.prototype.getTime = function () { return this.time; }
+TimeEvent.prototype.getTime = function () { 
+    return this.time;
+}
 
 TimeEvent.prototype.getTimeDiff = function (event) {
     if (typeof event === 'undefined') { return false; }
