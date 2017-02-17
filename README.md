@@ -28,19 +28,31 @@ import purrrf from 'purrrf';
 ## Usage
 
 ```javascript
-// creates _purrrf object on window (if in browser) or on global (if in nodejs). This prevents overriding itself if you have to require it in multiple places
+// creates _purrrf object on window (if in browser) or on global (if in nodejs). 
+// This prevents overriding itself if you have to require it in multiple places
 var purrrf = require('purrrf'); 
 
 // push an event to the master list
-purrrf.push('someEventName'); // returns true
+purrrf.push('someEventName'); 
+78.55 // returns time in ms from reference start at which event occurred
 
-// push an event to the master list with a group name. If the group name was used on a previous event, it will return the time difference between the two events in ms
+// push an event to the master list with a group name. 
+// If the group name was used on a previous event, it will return the time difference between the two events in ms
 purrrf.push('someEventNameStart', 'groupTask');
-/* do other stuff */
-purrrf.push('someEventNameEnd', 'groupTask'); // returns the time difference in ms between 'someEventNameStart' and 'someEventNameEnd'
+100.52
+/* do other stuff that takes 50ms */
+purrrf.push('someEventNameEnd', 'groupTask'); 
+50 // returns the time difference in ms between 'someEventNameStart' and 'someEventNameEnd'
+
+// note if you had not passed the 'groupTask' parameter above, it would return the time of that event, eg:
+purrrf.push('someEventNameEnd');
+150.52 // because no group parameter is specific, it returns the time
 
 // get the time from _start for any event
-purrrf.getTime('someEventName'); // returns false if passed event is not in the master list
+purrrf.getTime('someEventName'); 
+78.55 // returns time in ms from reference start at which event occurred
+purrrf.getTime('someEventNameThatDoesNotExist');
+false // returns false
 
 // you can also at any time get the time difference between any two known events
 // The second parameter is the reference point. Thus if first event occurred before the second, a negative value will be returned
