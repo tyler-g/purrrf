@@ -37,18 +37,18 @@ purrrf.push('someEventName');
 78.55 // returns time in ms from reference start at which event occurred
 
 // push an event to the master list with a group name. 
-// If the group name was used on a previous event, it will return the time difference between the two events in ms
+// If the group name was used on a previous event, it will return the time difference in ms between the this event and the most recent event with the same group name
 purrrf.push('someEventNameStart', 'groupTask');
 100.52
 /* do other stuff that takes 50ms */
 purrrf.push('someEventNameEnd', 'groupTask'); 
-50 // returns the time difference in ms between 'someEventNameStart' and 'someEventNameEnd'
+50 // returns the time difference in ms between 'someEventNameEnd' and 'someEventNameStart'
 
 // note if you had not passed the 'groupTask' parameter above, it would return the time of that event, eg:
 purrrf.push('someEventNameEnd');
-150.52 // because no group parameter is specific, it returns the time
+150.52 // because no group parameter is specified, it returns the time
 
-// get the time from _start for any event
+// get the time in ms from reference start for any event
 purrrf.getTime('someEventName'); 
 78.55 // returns time in ms from reference start at which event occurred
 purrrf.getTime('someEventNameThatDoesNotExist');
