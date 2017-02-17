@@ -28,7 +28,8 @@ import purrrf from 'purrrf';
 ## Usage
 
 ```javascript
-var purrrf = require('purrrf');
+// creates _purrrf object on window (if in browser) or on global (if in nodejs). This prevents overriding itself if you have to require it in multiple places
+var purrrf = require('purrrf'); 
 
 // push an event to the master list
 purrrf.push('someEventName'); // returns true
