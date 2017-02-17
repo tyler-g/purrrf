@@ -31,9 +31,7 @@ function init(options) {
     */
     push = function(name, group) {
         var newTime = new TimeEvent(name, group);
-        
-        //console.log('purrrf | push | %s %s', name, typeof group !== 'undefined' ? group : '');
-        
+            
         purrrfQueueMap[name] = newTime;
         purrrfOrderedQueue.push(newTime);
         
