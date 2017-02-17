@@ -1,11 +1,13 @@
 "use strict";
 
 const TimeEvent = require("./timeEvent.js");
+const globalRef = typeof window !== 'undefined' ? window : global;
 
+module.exports = globalRef._purrrf =
 function init(options) {
     
     /*
-      options
+      option defaults
     */
     options = options || {};
     options.startRefFallback = options.startRefFallback || false;
@@ -29,6 +31,8 @@ function init(options) {
     push = function(name, group) {
         var newTime = new TimeEvent(name, group);
         
+        console.log('purrrf | push | %s %s', name, typeof group !== 'undefined' ? group : '');
+        
         purrrfQueueMap[name] = newTime;
         purrrfOrderedQueue.push(newTime);
         
@@ -42,6 +46,7 @@ function init(options) {
         if (typeof group !== 'undefined') {
             openGroupMap[group] = name;
         }
+        
         
         return true;
     }
@@ -110,8 +115,4 @@ function init(options) {
         getTime     : getTime,
         getTimeDiff : getTimeDiff
     }   
-}
-    
-module.exports = init( {
-    startRefFallback : false
-});
+}()
