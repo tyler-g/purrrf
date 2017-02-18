@@ -1,6 +1,7 @@
 "use strict";
 
 const TimeEvent = require("./timeEvent.js");
+const uuidV4    = require('uuid/v4');
 const globalRef = typeof window !== 'undefined' ? window : global;
 
 module.exports = globalRef._purrrf =
@@ -96,6 +97,18 @@ function init(options) {
         return purrrfQueueMap[event].getTime() - offset;
     }
     
+    
+    /**
+     * ### .assert(expression, message, negateMessage, expected, actual, showDiff)
+     *
+     * Executes an expression and check expectations. Throws AssertionError for reporting if test doesn't pass.
+     *
+     * @name assert
+     * @param {Philosophical} expression to be tested
+     * @param {String|Function} message or function that returns message to display if expression fails
+     * @param {Boolean} showDiff (optional) when set to `true`, assert will display a diff in addition to the message if expression fails
+     * @api private
+     */
     getMap = function(options) {
         
         if (options && options.ordered) {
@@ -111,6 +124,7 @@ function init(options) {
     }
     
     return {
+        _id         : uuidV4(),
         push        : push,
         getMap      : getMap,
         getTime     : getTime,
