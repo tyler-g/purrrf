@@ -20,6 +20,7 @@ function init(options) {
     var getTime;
     var getTimeDiff;
     var setStart;
+    var getStart;
     
     var purrrfQueueMap      = {};
     var openGroupMap        = {};
@@ -52,6 +53,10 @@ function init(options) {
     
     setStart = function() {
         return offset = new TimeEvent().getTime();     
+    }
+    
+    getStart = function() {
+        return offset;
     }
     
     /* 
@@ -129,6 +134,7 @@ function init(options) {
         getMap      : getMap,
         getTime     : getTime,
         getTimeDiff : getTimeDiff,
-        setStart    : setStart
+        setStart    : setStart,
+        getStart    : getStart
     }   
 }();

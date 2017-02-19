@@ -7,11 +7,11 @@ describe("TimeEvent prototype", function() {
     var timeEvent = require(timeEventPath);
     var event = new timeEvent();
 
-    it("should have a getTime prototype", function() {
+    it("should have a getTime function", function() {
         expect(event.__proto__.getTime).to.not.be.undefined;
     });
     
-    it("should have a getTimeDiff prototype", function() {
+    it("should have a getTimeDiff function", function() {
         expect(event.__proto__.getTimeDiff).to.not.be.undefined;
     });
 });
@@ -39,18 +39,6 @@ describe("include lib", function() {
         it("should return a number greater than 0", function() {
             expect(typeof firstEventTime).to.equal('number');
             expect(firstEventTime).to.be.above(0);
-        });
-    });
-
-    describe("get event map", function() {
-        var map = lib.getMap();
-        
-        it("should be an object", function() {
-            expect(typeof map).to.equal('object');
-        });
-        
-        it("should contain the event we created", function() {
-            expect(map[firstEvent]).to.not.be.undefined;
         });
     });
 
@@ -114,8 +102,15 @@ describe("include lib", function() {
         var firstEventTimeToStartRef = lib.getTime(firstEvent);
         it("first event getTime + new reference start time should equal old first event time", function() {
             expect(firstEventTimeToStartRef + newStartRef).to.equal(firstEventTime);
-        });        
+        });     
         
+        describe("get current reference start time", function() {
+            var currentOffset = lib.getStart();
+            it("should return the current offset which was just set", function() {
+                expect(currentOffset).to.equal(newStartRef);
+            });
+        });
+    
     });
     
     describe("get event times using array of events", function() {
@@ -143,5 +138,64 @@ describe("include lib", function() {
         });
         
     });
-    
+
+    describe("get time diff of an undefined event and no passed reference event", function() {
+        var undefinedEventTimeDiff = lib.getTimeDiff('undefined');
+        
+        it("should return false", function() {
+            expect(undefinedEventTimeDiff).to.be.false;
+        });
+        
+    });
+
+    describe("get time diff of a defined event and a passed undefined reference event", function() {
+        var definedEventUndefinedReferenceTime = lib.getTimeDiff(firstEvent, 'undefined');
+        var currentOffset = lib.getStart();
+        
+        it("should return the definded event's time minus any offset if the start reference has been changed", function() {
+            expect(definedEventUndefinedReferenceTime).to.equal(firstEventTime - currentOffset);
+        });
+    });
+        
+    describe("push new event with group name", function() {
+        
+        var eventWithGroupTime = lib.push("event", "group");
+        
+        it("should return a number greater than 0", function() {
+            expect(eventWithGroupTime).to.be.above(0);
+        });
+        
+        describe("push another event with same group name", function() {
+            var anotherEvent = "anotherEvent";
+            var anotherEventWithGroupTimeDiff = lib.push(anotherEvent, "group");
+            
+            it("should return the time difference between the two events of the same group name", function() {
+                expect(anotherEventWithGroupTimeDiff).to.be.above(0);
+                
+                var anotherEventWithGroupTime = lib.getTime(anotherEvent);
+                expect(anotherEventWithGroupTime).to.be.above(0);
+                expect(anotherEventWithGroupTime - eventWithGroupTime).to.equal(anotherEventWithGroupTimeDiff);
+            });
+        });
+        
+    });
+
+    describe("get event map", function() {
+        var map = lib.getMap();
+        
+        it("should be an object", function() {
+            expect(typeof map).to.equal('object');
+        });
+        
+        it("should contain an event we created", function() {
+            expect(map[firstEvent]).to.not.be.undefined;
+        });
+    });
+        
+    describe("get event map passing the ordered option", function() {
+        var orderedEvents = lib.getMap({ ordered: true });
+        it("should return an array", function() {
+            expect(orderedEvents).to.be.an('array');
+        });
+    });
 });
