@@ -1,7 +1,7 @@
 # purrrf
 
 ![Build Status](https://img.shields.io/travis/tyler-g/purrrf.svg)
-![Coverage](https://img.shields.io/coveralls/tyler-g/purrrf.svg)
+[![codecov](https://codecov.io/gh/tyler-g/purrrf/branch/master/graph/badge.svg)](https://codecov.io/gh/tyler-g/purrrf)
 ![Downloads](https://img.shields.io/npm/dm/purrrf.svg)
 ![Downloads](https://img.shields.io/npm/dt/purrrf.svg)
 ![npm version](https://img.shields.io/npm/v/purrrf.svg)
