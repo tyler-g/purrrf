@@ -1,7 +1,7 @@
 {
   "name": "purrrf",
   "description": "a lightweight utility for measuring accurate performance timings in the browser or in nodejs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "lib/index.js",
   "author": "tyler-g",
   "repository": "tyler-g/purrrf",
