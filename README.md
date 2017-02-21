@@ -1,7 +1,7 @@
 # purrrf
 
 ![Build Status](https://img.shields.io/travis/tyler-g/purrrf.svg)
-![Coverage](https://img.shields.io/coveralls/tyler-g/purrrf.svg)
+[![codecov](https://codecov.io/gh/tyler-g/purrrf/branch/master/graph/badge.svg)](https://codecov.io/gh/tyler-g/purrrf)
 ![Downloads](https://img.shields.io/npm/dm/purrrf.svg)
 ![Downloads](https://img.shields.io/npm/dt/purrrf.svg)
 ![npm version](https://img.shields.io/npm/v/purrrf.svg)
@@ -22,7 +22,8 @@ npm install purrrf
 And include in your project:
 
 ```javascript
-import purrrf from 'purrrf';
+var purrrf = require('purrrf'); // nodejs / requirejs
+import purrrf from 'purrrf'; // browser
 ```
 
 ## Usage
@@ -56,14 +57,14 @@ false // returns false
 
 // you can also at any time get the time difference between any two known events
 // The second parameter is the reference point. Thus if first event occurred before the second, a negative value will be returned
-purrr.getTimeDiff('someEventNameEnd', 'someEventNameStart');
+purrrf.getTimeDiff('someEventNameEnd', 'someEventNameStart');
 
 
 // you can pull the event map at any time which contains all collected data on every event pushed to the master list
 purrrf.getMap(); // returns object map. The keys of this object are event names. Thus note if you pushed the same event name to the master list, the latter will override the former.
 
 // if you'd rather get an ordered event list...
-purrr.getMap({ ordered: true }); // returns an array (not an object!) which contains the pushed events in the order in which they were received
+purrrf.getMap({ ordered: true }); // returns an array (not an object!) which contains the pushed events in the order in which they were received
 
 ```
 
