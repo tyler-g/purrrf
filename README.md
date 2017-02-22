@@ -22,8 +22,18 @@ npm install purrrf
 And include in your project:
 
 ```javascript
-var purrrf = require('purrrf'); // nodejs / requirejs
-import purrrf from 'purrrf'; // browser
+var purrrf = require('purrrf'); // nodejs, requirejs, or any framework that supports require
+```
+
+Or use browserify to build a requirable module for the browser:
+```shell
+browserify src/index.js -o purrrf.js
+```
+```html
+<script src="purrrf.js"></script>
+```
+```javascript
+var purrrf = require('purrrf');
 ```
 
 ## Usage
