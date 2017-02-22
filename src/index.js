@@ -28,9 +28,13 @@ function init(options) {
     
     var offset = 0;
     
-    /*
-      methods
-    */
+    
+    /**
+     * Pushes a new event to the master list
+     * @param {String} name event name
+     * @param {String} group group name used for grouping events of a similar type
+     * @return {Number} Returns time since reference start of the event just created. If group is passed and it has been used on a previous pushed event, returns the time difference in ms between this event and the most recent event with the same group. If this is first time this group is passed, returns time in ms since reference start.
+     */
     push = function(name, group) {
         var newTime = new TimeEvent(name, group);
             
@@ -50,24 +54,32 @@ function init(options) {
         
         return newTime.getTime() - offset;
     }
-    
+
+
+    /**
+     * Sets start reference time to now
+     * @return {Number} Returns the start reference time in ms that was just set.
+     */
     setStart = function() {
         return offset = new TimeEvent().getTime();     
     }
-    
+
+
+    /**
+     * Gets current start reference time. Default is 0
+     * @return {Number} Returns the current start reference time in ms.
+     */
     getStart = function() {
         return offset;
     }
     
-    /* 
-        Gets the execution time difference between event and event reference.
-        If event reference is not passed OR is not in the map, the internal _start reference is used.
-        
-        @param event | type string | event name 
-        @param eventReference | type string | event name of the reference
-        
-        return | type number | the float value in ms of the time difference between the events
-    */
+
+    /**
+     * Gets the time difference in ms between event and event reference.
+     * @param {String} event event name
+     * @param {String} eventReference event name of the reference. If not passed, start reference is used
+     * @return {Number|Boolean} Returns the time difference in ms between the events. Negative value indicates event occurred before eventReference. If event is not found in the master map, returns false.
+     */
     getTimeDiff = function(event, eventReference) {
         if (typeof purrrfQueueMap[event] === 'undefined') { return false }    
         if (typeof purrrfQueueMap[eventReference] === 'undefined') { 
@@ -77,7 +89,13 @@ function init(options) {
         
         return purrrfQueueMap[event].getTimeDiff(purrrfQueueMap[eventReference]);
     }
-    
+
+
+    /**
+     * Gets time since reference start of an event 
+     * @param {String|Array} event name of a single event || array of event names
+     * @return {Number|Array|Boolean} Returns time in ms since reference start for a single event. If array is passed, returns array of times instead. If a single event is passed and is not in the master map, returns false.
+     */
     getTime = function(event) {
         // if passed an array of time events
         if (typeof event === 'object' && typeof event.length !== 'undefined') {
@@ -104,15 +122,9 @@ function init(options) {
     
     
     /**
-     * ### .assert(expression, message, negateMessage, expected, actual, showDiff)
-     *
-     * Executes an expression and check expectations. Throws AssertionError for reporting if test doesn't pass.
-     *
-     * @name assert
-     * @param {Philosophical} expression to be tested
-     * @param {String|Function} message or function that returns message to display if expression fails
-     * @param {Boolean} showDiff (optional) when set to `true`, assert will display a diff in addition to the message if expression fails
-     * @api private
+     * Gets the object map of all pushed events
+     * @param {Object} options options to pass in
+     * @return {Object|Array} Returns object map with event names as keys. If options.ordered is passed, returns an ordered array instead.
      */
     getMap = function(options) {
         
@@ -127,6 +139,7 @@ function init(options) {
         
         return purrrfQueueMap;
     }
+    
     
     return {
         _id         : uuidV4(),
