@@ -55,10 +55,18 @@ function init(options) {
         if (!eventContext ) { return false }
         
         return new Promise(function(resolve, reject) {
-            eventContext.on(eventToBind, () => {
-              console.log('bound event %s called!', eventToBind);
-              resolve(push(eventToPush, group));
-            });
+            if (typeof eventContext.on === 'undefined') {
+                eventContext.addEventListener(eventToBind, () => {
+                    console.log('bound event %s called!', eventToBind);
+                    resolve(push(eventToPush, group));
+                }, false);
+            }
+            else {
+                eventContext.on(eventToBind, () => {
+                  console.log('bound event %s called!', eventToBind);
+                  resolve(push(eventToPush, group));
+                });
+            }
         });
     }
     
@@ -176,14 +184,14 @@ function init(options) {
     
     
     return {
-        _id         : uuidV4(),
-        push        : push,
-        getMap      : getMap,
-        getTime     : getTime,
-        getTimeDiff : getTimeDiff,
-        setStart    : setStart,
-        getStart    : getStart,
-        setEventContext: setEventContext,
-        bind : bind
+        _id             : uuidV4(),
+        push            : push,
+        getMap          : getMap,
+        getTime         : getTime,
+        getTimeDiff     : getTimeDiff,
+        setStart        : setStart,
+        getStart        : getStart,
+        setEventContext : setEventContext,
+        bind            : bind
     }   
 }();
