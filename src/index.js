@@ -35,12 +35,12 @@ function init(options) {
     /**
      * Sets the event context on which to bind event listeners
      * @param {String} context the event context
-     * @return {undefined|Boolean} Returns undefined if event context is set successfully. If no context is passed, returns false.
+     * @return {Object|Boolean} Returns the event context object that was set successfully. If no context is passed, returns false.
      */
     setEventContext = function(context) {
         if (!context) { return false }
         
-        eventContext = context;
+        return eventContext = context;
     }
 
 
@@ -56,6 +56,9 @@ function init(options) {
         
         return new Promise(function(resolve, reject) {
             if (typeof eventContext.on === 'undefined') {
+                if (typeof eventContext.addEventListener === 'undefined') {
+                    return reject(false);
+                }
                 eventContext.addEventListener(eventToBind, () => {
                     console.log('bound event %s called!', eventToBind);
                     resolve(push(eventToPush, group));

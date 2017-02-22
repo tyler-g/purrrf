@@ -21,6 +21,13 @@ describe("TimeEvent prototype", function() {
     it("should have a getTimeDiff function", function() {
         expect(event.__proto__.getTimeDiff).to.not.be.undefined;
     });
+    
+    describe("call TimeEvent getTimeDiff function with no parameters", function() {
+        
+        it("should return false", function() {
+            expect(event.__proto__.getTimeDiff()).to.be.false;
+        });
+    })
 });
 
 describe("Include lib", function() {
@@ -201,6 +208,7 @@ describe("Include lib", function() {
         
     describe("Get event map passing the ordered option", function() {
         var orderedEvents = lib.getMap({ ordered: true });
+        
         it("should return an array", function() {
             expect(orderedEvents).to.be.an('array');
         });
@@ -214,8 +222,36 @@ describe("Include lib", function() {
         });
         
         describe("Bind an event to the context (which is currently null because no context was previously passed)", function() {
+            
             it("should return false", function() {
                 expect(lib.bind("eventToListenFor", "timeEventToPush")).to.be.false;
+            });
+            
+            after(function() {
+                describe("Set event context to an invalid event context (an object which has no .on method)", function() {
+                    var invalidEventContext = {};
+                    var setContext = lib.setEventContext(invalidEventContext);
+                    
+                    it("should return the context passed", function() {
+                        expect(setContext).to.be.equal(invalidEventContext);
+                    });
+                    
+                    describe("Bind an event to the invalid context", function() {
+                        var boundedEventPromise = lib.bind("eventToListenFor", "timeEventToPush");
+                        
+                        it("should return a Promise", function() {
+                            expect(boundedEventPromise).to.be.a('promise');
+                        });
+                        
+                        describe("Emit the event that is being listened for by the invalid context", function() {
+                            
+                            it("should trigger the bounded event promise to reject with false", function() {
+                                globalEventContext.emit('eventToListenFor');
+                                return expect(boundedEventPromise).to.eventually.be.reject;
+                            });
+                        });
+                    });
+                });
             });
         });
         
