@@ -143,7 +143,7 @@ function init(options) {
         if (typeof event === 'object' && typeof event.length !== 'undefined') {
             var len = event.length;
             var returnArr = [];
-            
+
             for (var i = 0; i < len; i++) {
                 if (typeof purrrfQueueMap[event[i]] === 'undefined') {
                     returnArr.push(false);
@@ -155,7 +155,7 @@ function init(options) {
             
             return returnArr;    
         }
-        
+
         // otherwise assume single time event
         if (typeof purrrfQueueMap[event] === 'undefined') { return false }
         

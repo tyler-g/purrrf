@@ -1,5 +1,12 @@
-import { assert, expect } from 'chai';
+const chai = require('chai');
+const expect = chai.expect;
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+
 const globalRef = typeof window !== 'undefined' ? window : global;
+
+const EventEmitter = require('events');
+const globalEventContext = typeof document !== 'undefined' ? document : new EventEmitter();
 const indexPath = '../../src/index';
 const timeEventPath = '../../src/timeEvent';
 
@@ -16,7 +23,7 @@ describe("TimeEvent prototype", function() {
     });
 });
 
-describe("include lib", function() {
+describe("Include lib", function() {
     var lib = require(indexPath);
     
     it("is on global context", function() {
@@ -33,7 +40,7 @@ describe("include lib", function() {
     
     var firstEvent = 'event1';
     var firstEventTime;
-    describe("push new event", function() {
+    describe("Push new event", function() {
         firstEventTime = lib.push(firstEvent);
 
         it("should return a number greater than 0", function() {
@@ -42,7 +49,7 @@ describe("include lib", function() {
         });
     });
 
-    describe("get event time", function() {
+    describe("Get event time", function() {
         var time = lib.getTime(firstEvent);
         
         it("should return a number greater than 0", function() {
@@ -55,7 +62,7 @@ describe("include lib", function() {
 
     var secondEvent = 'event2';
     var secondEventTime;
-    describe("push a second event", function() {
+    describe("Push a second event", function() {
 
         secondEventTime = lib.push(secondEvent);
         
@@ -63,7 +70,7 @@ describe("include lib", function() {
             expect(secondEventTime).to.be.above(firstEventTime);
         });
         
-        describe("get time diff between two events", function() {
+        describe("Get time diff between two events", function() {
             var diff = lib.getTimeDiff(secondEvent, firstEvent);
             var diffNegative = lib.getTimeDiff(firstEvent, secondEvent);
             
@@ -86,7 +93,7 @@ describe("include lib", function() {
         
     }); 
     
-    describe("change reference start time to now", function() {
+    describe("Change reference start time to now", function() {
 
         var newStartRef = lib.setStart();
 
@@ -104,7 +111,7 @@ describe("include lib", function() {
             expect(firstEventTimeToStartRef + newStartRef).to.equal(firstEventTime);
         });     
         
-        describe("get current reference start time", function() {
+        describe("Get current reference start time", function() {
             var currentOffset = lib.getStart();
             it("should return the current offset which was just set", function() {
                 expect(currentOffset).to.equal(newStartRef);
@@ -113,7 +120,7 @@ describe("include lib", function() {
     
     });
     
-    describe("get event times using array of events", function() {
+    describe("Get event times using array of events", function() {
         var multipleEvents = [firstEvent, secondEvent];
         var multipleEventTimes = lib.getTime(multipleEvents);
         
@@ -130,7 +137,7 @@ describe("include lib", function() {
         
     });
 
-    describe("get event time of an undefined event", function() {
+    describe("Get event time of an undefined event", function() {
         var undefinedEventTime = lib.getTime('undefined');
         
         it("should return false", function() {
@@ -139,7 +146,7 @@ describe("include lib", function() {
         
     });
 
-    describe("get time diff of an undefined event and no passed reference event", function() {
+    describe("Get time diff of an undefined event and no passed reference event", function() {
         var undefinedEventTimeDiff = lib.getTimeDiff('undefined');
         
         it("should return false", function() {
@@ -148,7 +155,7 @@ describe("include lib", function() {
         
     });
 
-    describe("get time diff of a defined event and a passed undefined reference event", function() {
+    describe("Get time diff of a defined event and a passed undefined reference event", function() {
         var definedEventUndefinedReferenceTime = lib.getTimeDiff(firstEvent, 'undefined');
         var currentOffset = lib.getStart();
         
@@ -157,7 +164,7 @@ describe("include lib", function() {
         });
     });
         
-    describe("push new event with group name", function() {
+    describe("Push new event with group name", function() {
         
         var eventWithGroupTime = lib.push("event", "group");
         
@@ -165,7 +172,7 @@ describe("include lib", function() {
             expect(eventWithGroupTime).to.be.above(0);
         });
         
-        describe("push another event with same group name", function() {
+        describe("Push another event with same group name", function() {
             var anotherEvent = "anotherEvent";
             var anotherEventWithGroupTimeDiff = lib.push(anotherEvent, "group");
             
@@ -180,7 +187,7 @@ describe("include lib", function() {
         
     });
 
-    describe("get event map", function() {
+    describe("Get event map", function() {
         var map = lib.getMap();
         
         it("should be an object", function() {
@@ -192,10 +199,54 @@ describe("include lib", function() {
         });
     });
         
-    describe("get event map passing the ordered option", function() {
+    describe("Get event map passing the ordered option", function() {
         var orderedEvents = lib.getMap({ ordered: true });
         it("should return an array", function() {
             expect(orderedEvents).to.be.an('array');
         });
     });
+    
+    describe("Set event context without passing a context", function() {
+        var setContext = lib.setEventContext();
+
+        it("should return false", function() {
+            expect(setContext).to.be.false;
+        });
+        
+        describe("Bind an event to the context (which is currently null because no context was previously passed)", function() {
+            it("should return false", function() {
+                expect(lib.bind("eventToListenFor", "timeEventToPush")).to.be.false;
+            });
+        });
+        
+        // must use after – otherwise the above tests may inadvertently fail because the context is set on the library below before they are checked.
+        after(function() {    
+            describe("Set event context to document (if browser), or EventEmitter (if node)", function() {
+                var setContext = lib.setEventContext(globalEventContext);
+
+                it("should not return false", function() {
+                    expect(setContext).to.not.be.false;
+                });
+                
+                describe("Bind an event to the context", function() {
+                    var boundedEventPromise = lib.bind("eventToListenFor", "timeEventToPush");
+                    
+                    it("should return a Promise", function() {
+                        expect(boundedEventPromise).to.be.a('promise');
+                    });
+
+                    describe("Emit the event that is being listened for by the context", function() {
+                        
+                        it("should trigger the bounded event promise to resolve with a TimeEvent number", function() {
+                            globalEventContext.emit('eventToListenFor');
+                            return expect(boundedEventPromise).to.eventually.be.a('number');
+                        });
+                    });
+
+                });
+            });
+        });
+    });
+    
+
 });
