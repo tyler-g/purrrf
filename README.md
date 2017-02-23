@@ -39,6 +39,11 @@ var purrrf = require('purrrf');
 
 ```javascript
 
+// set the reference point for all future times
+// it is a good habit to call this as early as possible, so its clear where your start reference time is in the code
+purrrf.setStart();
+15.2 // returns time in ms as the new reference start
+
 // push an event to the master list
 purrrf.push('someEventName'); 
 78.55 // returns time in ms from reference start at which event occurred
@@ -64,7 +69,7 @@ false // returns false
 // you can also at any time get the time difference between any two known events
 // The second parameter is the reference point. Thus if first event occurred before the second, a negative value will be returned
 purrrf.getTimeDiff('someEventNameEnd', 'someEventNameStart');
-
+50 // returns the time difference in ms between 'someEventNameEnd' and 'someEventNameStart'
 
 // you can pull the event map at any time which contains all collected data on every event pushed to the master list
 purrrf.getMap(); // returns object map. The keys of this object are event names. Thus note if you pushed the same event name to the master list, the latter will override the former.
