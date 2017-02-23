@@ -9,7 +9,9 @@
 ![dev dependencies](https://img.shields.io/david/dev/tyler-g/purrrf.svg)
 ![License](https://img.shields.io/npm/l/purrrf.svg)
 
-a lightweight utility for measuring accurate performance timings in the browser or in nodejs
+a lightweight utility for measuring accurate performance timings in the browser or in nodejs. 
+
+*2.5KB gzipped!*
 
 ## Getting Started
 
