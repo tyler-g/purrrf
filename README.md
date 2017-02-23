@@ -21,14 +21,13 @@ npm install purrrf
 
 And include in your project:
 
+#### Node
 ```javascript
 var purrrf = require('purrrf'); // nodejs, requirejs, or any framework that supports require
 ```
-
-Or use browserify to build a requirable module for the browser:
-```shell
-browserify src/index.js -o purrrf.js
-```
+#### Browser
+*purrrf.js* is included in the browser folder of every release
+(for browser projects not using any framework supporting require)
 ```html
 <script src="purrrf.js"></script>
 ```
@@ -39,9 +38,6 @@ var purrrf = require('purrrf');
 ## Usage
 
 ```javascript
-// creates _purrrf object on window (if in browser) or on global (if in nodejs). 
-// This prevents overriding itself if you have to require it in multiple places
-var purrrf = require('purrrf'); 
 
 // push an event to the master list
 purrrf.push('someEventName'); 
