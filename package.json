@@ -22,6 +22,7 @@
     "coveralls": "*",
     "isparta": "*",
     "mocha": "*",
+    "mock-browser": "^0.92.12",
     "sinon": "*"
   },
   "dependencies": {

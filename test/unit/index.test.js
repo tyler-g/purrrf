@@ -5,10 +5,14 @@ chai.use(chaiAsPromised);
 
 const globalRef = typeof window !== 'undefined' ? window : global;
 
+const MockBrowser = require('mock-browser').mocks.MockBrowser;
 const EventEmitter = require('events');
+
 const globalEventContext = typeof document !== 'undefined' ? document : new EventEmitter();
 const indexPath = '../../src/index';
 const timeEventPath = '../../src/timeEvent';
+
+
 
 describe("TimeEvent prototype", function() {
     var timeEvent = require(timeEventPath);
@@ -249,6 +253,43 @@ describe("Include lib", function() {
                                 globalEventContext.emit('eventToListenFor');
                                 return expect(boundedEventPromise).to.eventually.be.reject;
                             });
+                        });
+                        
+                        
+                        after(function() {
+                            describe("Mock browser document", function() {
+                                var mock = new MockBrowser();
+                                var documentEventContext = mock.getDocument();
+                                var windowContext = mock.getWindow();
+                                
+                                it("should have an addEventListener method", function() {
+                                    expect(documentEventContext.addEventListener).to.not.be.undefined;
+                                });
+                                
+                                describe("Set event context to mock browser document", function() {
+                                    var setContext = lib.setEventContext(documentEventContext);
+                                    
+                                    it("should return the context passed", function() {
+                                        expect(setContext).to.be.equal(documentEventContext);
+                                    });
+                                    
+                                    describe("Bind an event to the document context", function() {
+                                        var boundedEventPromise = lib.bind("eventToListenFor", "timeEventToPush");
+                                        
+                                        it("should return a Promise", function() {
+                                            expect(boundedEventPromise).to.be.a('promise');
+                                        });
+                                        
+                                        describe("Emit the event that is being listened for by the document context", function() {
+                                            
+                                            it("should trigger the bounded event promise to resolve with a TimeEvent number", function() {
+                                                documentEventContext.dispatchEvent(new windowContext.CustomEvent('eventToListenFor'));
+                                                return expect(boundedEventPromise).to.eventually.be.a('number');
+                                            });
+                                        });
+                                    });
+                                });
+                            })
                         });
                     });
                 });
