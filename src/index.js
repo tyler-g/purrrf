@@ -6,7 +6,7 @@ const globalRef = typeof window !== 'undefined' ? window : global;
 
 module.exports = globalRef._purrrf =
 function init(options) {
-    
+
     /*
       option defaults
     */
@@ -21,12 +21,57 @@ function init(options) {
     var getTimeDiff;
     var setStart;
     var getStart;
+    var setEventContext;
+    var bind;
     
     var purrrfQueueMap      = {};
     var openGroupMap        = {};
     var purrrfOrderedQueue  = [];
+    var eventContext        = null;
     
     var offset = 0;
+    
+
+    /**
+     * Sets the event context on which to bind event listeners
+     * @param {String} context the event context
+     * @return {Object|Boolean} Returns the event context object that was set successfully. If no context is passed, returns false.
+     */
+    setEventContext = function(context) {
+        if (!context) { return false }
+        
+        return eventContext = context;
+    }
+
+
+    /**
+     * Binds an event listener to the event context, which pushes a new event to the master list when called
+     * @param {String} eventToBind name of event to listen for
+     * @param {String} eventToPush name of new event to push to master list
+     * @param {String} group name of group to attach to the new event (optional)
+     * @return {Promise|Boolean} Returns a promise which resolves when the event listener is called. If no event context has been set, returns false.
+     */
+    bind = function(eventToBind, eventToPush, group) {
+        if (!eventContext ) { return false }
+        
+        return new Promise(function(resolve, reject) {
+            if (typeof eventContext.on === 'undefined') {
+                if (typeof eventContext.addEventListener === 'undefined') {
+                    return reject(false);
+                }
+                eventContext.addEventListener(eventToBind, () => {
+                    console.log('bound event %s called!', eventToBind);
+                    resolve(push(eventToPush, group));
+                }, false);
+            }
+            else {
+                eventContext.on(eventToBind, () => {
+                  console.log('bound event %s called!', eventToBind);
+                  resolve(push(eventToPush, group));
+                });
+            }
+        });
+    }
     
     
     /**
@@ -101,7 +146,7 @@ function init(options) {
         if (typeof event === 'object' && typeof event.length !== 'undefined') {
             var len = event.length;
             var returnArr = [];
-            
+
             for (var i = 0; i < len; i++) {
                 if (typeof purrrfQueueMap[event[i]] === 'undefined') {
                     returnArr.push(false);
@@ -113,7 +158,7 @@ function init(options) {
             
             return returnArr;    
         }
-        
+
         // otherwise assume single time event
         if (typeof purrrfQueueMap[event] === 'undefined') { return false }
         
@@ -142,12 +187,14 @@ function init(options) {
     
     
     return {
-        _id         : uuidV4(),
-        push        : push,
-        getMap      : getMap,
-        getTime     : getTime,
-        getTimeDiff : getTimeDiff,
-        setStart    : setStart,
-        getStart    : getStart
+        _id             : uuidV4(),
+        push            : push,
+        getMap          : getMap,
+        getTime         : getTime,
+        getTimeDiff     : getTimeDiff,
+        setStart        : setStart,
+        getStart        : getStart,
+        setEventContext : setEventContext,
+        bind            : bind
     }   
 }();
