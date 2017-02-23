@@ -26,7 +26,7 @@ And include in your project:
 var purrrf = require('purrrf'); // nodejs, requirejs, or any framework that supports require
 ```
 #### Browser
-*purrrf.js* is included in the browser folder of every release
+*purrrf.js* and *purrrf-min.js* are included in the browser folder of every release
 (for browser projects not using any framework supporting require)
 ```html
 <script src="purrrf.js"></script>
