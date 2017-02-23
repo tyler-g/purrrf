@@ -13,6 +13,8 @@ a lightweight utility for measuring accurate performance timings in the browser 
 
 *2.5KB gzipped!*
 
+<img src="jimmy.jpg" width="420" alt="jimmy" />
+
 ## Getting Started
 
 Install it via npm:
