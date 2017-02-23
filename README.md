@@ -97,6 +97,33 @@ purrrf.getTimeDiff('someEventNameEnd', 'someEventNameStart');
 
 ```
 
+#### Automatically Push Time Events from Event Listeners
+In case your project already has events that fire at significant times in which you would like to track, you can bind to those events and automatically push Time Events to purrrf.
+
+```javascript
+
+// You must first set the context on which to listen for events
+purrrf.setContext(document); // browser
+/* or */
+purrrf.setContext(myEventEmitter); // node (where eventEmitter is an instance of EventEmitter)
+
+```
+```javascript
+
+// every time 'eventToListenForOnTheContext' event fires, 'eventToPushToPurrrfWhenThatHappens' will get pushed to purrrf
+purrrf.bind('eventToListenForOnTheContext', 'eventToPushToPurrrfWhenThatHappens', 'optionalGroupName');
+
+// binding returns a Promise which resolves when the event being listened for is fired
+purrrf.bind('eventToListenForOnTheContext', 'eventToPushToPurrrfWhenThatHappens', 'optionalGroupName').then(function(result) {
+    // result is the time returned from pushing event `eventToPushToPurrrfWhenThatHappens`
+    console.log('eventToPushToPurrrfWhenThatHappens was pushed to purrrf after x ms from reference start', result);
+    // this follows the same rules as what returns from purrrf.push (see above). 
+    // If an group name was passed, and a Time Event with that group name has previously been pushed, 
+    // then result will be the time difference in ms between those two Time Events
+});
+
+```
+
 #### Get the master list (generally not needed)
 ```javascript
 
