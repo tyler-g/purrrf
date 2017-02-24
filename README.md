@@ -36,7 +36,7 @@ var purrrf = require('purrrf'); // nodejs, requirejs, or any framework that supp
 <script src="purrrf.js"></script>
 ```
 ```javascript
-var purrrf = require('purrrf');
+var purrrf = window._purrrf;
 ```
 
 ## Usage
