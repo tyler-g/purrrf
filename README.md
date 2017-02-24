@@ -13,7 +13,7 @@ a lightweight utility for measuring accurate performance timings in the browser 
 
 *2.5KB gzipped!*
 
-<img src="https://github.com/tyler-g/purrrf/blob/master/jimmy.jpg" width="420" alt="jimmy" />
+<img src="https://github.com/tyler-g/purrrf/blob/master/jimmy.jpg?raw=true" width="420" alt="jimmy" />
 
 ## Getting Started
 
